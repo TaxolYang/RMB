@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="ec8c3992-0ce8-4f72-a15b-0a5ea12bb901" name="Default Changelist" comment="">
       <change afterPath="$PROJECT_DIR$/untitled/venv/webScraping/meituan.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/untitled/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/untitled/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/untitled/venv/webScraping/hotel.txt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/untitled/venv/webScraping/hotelScraping03.py" beforeDir="false" afterPath="$PROJECT_DIR$/untitled/venv/webScraping/hotelScraping03.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/untitled/venv/webScraping/hotel_list.txt" beforeDir="false" />
@@ -35,7 +35,9 @@
     </leaf>
   </component>
   <component name="Git.Settings">
+    <option name="ROOT_SYNC" value="SYNC" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_COMMON_BRANCH" value="master" />
   </component>
   <component name="ProjectFrameBounds">
     <option name="x" value="71" />
@@ -114,9 +116,9 @@
     <configuration />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1920" height="1123" extended-state="0" />
+    <frame x="71" y="164" width="1148" height="673" extended-state="0" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24960506" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.42058563" />
       <window_info id="Structure" order="1" weight="0.25" />
       <window_info anchor="bottom" id="Educational.CheckDetails" />
       <window_info anchor="bottom" id="Version Control" />
