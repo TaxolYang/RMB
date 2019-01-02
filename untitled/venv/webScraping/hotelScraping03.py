@@ -11,13 +11,13 @@ import random
 def main():
 
 
-    newfile = '三亚天域度假酒店.txt'
+    newfile = '重庆洪崖洞大酒店.txt'
 
     f = open(newfile, 'w')
     headers = {
                 'authority': 'www.mafengwo.cn',
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36',
-               'referer': 'https://www.mafengwo.cn/hotel/1460.html?iMddid=10030',
+               'referer': 'https://www.mafengwo.cn/hotel/48356.html?iMddid=10208',
                  'x - requested -with': 'XMLHttpRequest',
                   'accept': 'application / json, text / javascript, * / *; q = 0.01',
              'accept - encoding': 'gzip, deflate, br',
@@ -26,15 +26,15 @@ def main():
     }
 
     num = 1
-    for num in range(1, 865):
+    for num in range(1, 428):
         # sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf8')
-        url = 'https://www.mafengwo.cn/hotel/info/comment_list?poi_id=1460&type=0&keyword_id=0&page='+str(num)
+        url = 'https://www.mafengwo.cn/hotel/info/comment_list?poi_id=48356&type=0&keyword_id=0&page='+str(num)
         res = requests.get(url, headers=headers)
 
         soup = BeautifulSoup(res.text, 'html.parser')
 
         html = res.content
-     #马蜂窝数据应该是加密了
+
 
         ht2 = html.decode('unicode-escape')
         # ht2 = ht1.replace('\/', '/')
