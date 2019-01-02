@@ -1,6 +1,7 @@
 #-*- coding: UTF-8 -*-
 
 
+import operator
 import cv2
 import numpy as np
 from PIL import Image
@@ -21,7 +22,7 @@ def Gaussian_Blur(gray):
     return blurred
 
 def Erzi(blurred):
-    ret,thresh1=cv2.threshold(blurred,120,255,cv2.THRESH_BINARY)
+    ret,thresh1=cv2.threshold(blurred,130,255,cv2.THRESH_BINARY)
     return thresh1
 
 def Sobel_gradient(blurred):
@@ -42,17 +43,16 @@ def Thresh_and_blur(gradient):
     return thresh
 
 def image_morphology(thresh):
-    # 建立一个椭圆核函数
+
     kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (25, 25))
-    # 执行图像形态学, 细节直接查文档，很简单
     closed = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel)
-    closed = cv2.erode(closed, None, iterations=4)
-    closed = cv2.dilate(closed, None, iterations=4)
+    closed = cv2.erode(closed, None, iterations=3)
+    closed = cv2.dilate(closed, None, iterations=3)
 
     return closed
 
 def findcnts_and_box_point(closed):
-    # 这里opencv3返回的是三个参数
+
     (_, cnts, _) = cv2.findContours(closed.copy(),
         cv2.RETR_LIST,
         cv2.CHAIN_APPROX_SIMPLE)
@@ -64,8 +64,6 @@ def findcnts_and_box_point(closed):
     return box
 
 def drawcnts_and_cut(original_img, box):
-    # 因为这个函数有极强的破坏性，所有需要在img.copy()上画
-    # draw a bounding box arounded the detected barcode and display the image
     draw_img = cv2.drawContours(original_img.copy(), [box], -1, (0, 0, 255), 3)
 
     Xs = [i[0] for i in box]
@@ -82,9 +80,9 @@ def drawcnts_and_cut(original_img, box):
 
 def walk():
 
-    img_path = r'C:/Users/yxy86/Desktop/RMB/12.jpg'
+    img_path = r'C:/Users/yxy86/Desktop/RMB/23.jpg'
 
-    save_path = r'C:/Users/yxy86/Desktop/RMB/mtest.jpg'
+    save_path = r'C:/Users/yxy86/Desktop/RMB/01/mtest.jpg'
     original_img, gray = get_image(img_path)
     blurred = Gaussian_Blur(gray)
     th1 = Erzi(blurred)
@@ -110,48 +108,77 @@ def walk():
 
 
 
-def phash(path):
-    highfreq_factor = 1
-    hash_size = 8
-    img_size = hash_size * highfreq_factor
+def hist(path):
+    img=cv2.imread(path,0)
+    hist=cv2.calcHist([img],[0],None,[256],[0,256])
+    return hist
 
-    hash = imagehash.phash(Image.open(path),hash_size=hash_size,highfreq_factor=highfreq_factor)
-    return hash
+def hist_similar(lh, rh):
+    assert len(lh) == len(rh)
+    return sum(1 - (0 if l == r else float(abs(l - r))/max(l, r)) for l, r in zip(lh, rh))/len(lh)
 
-dict = {'100': '', '50':' ', '20':'', '10': '', '5': '', '1':''}
-dict['100'] = phash('/Users/yangxiaoyu/Desktop/RMB/m100.jpg')
-dict['50'] = phash('/Users/yangxiaoyu/Desktop/RMB/m50.jpg')
-dict['20'] = phash('/Users/yangxiaoyu/Desktop/RMB/m20.jpg')
-dict['10'] = phash('/Users/yangxiaoyu/Desktop/RMB/m10.jpg')
-dict['5'] = phash('/Users/yangxiaoyu/Desktop/RMB/m5.jpg')
-dict['1'] = phash('/Users/yangxiaoyu/Desktop/RMB/m1.jpg')
+def make_regalur_image(img, size = (256, 256)):
+    return img.resize(size).convert('RGB')
+
+
+def calc_similar(li, ri):
+    return hist_similar(li.histogram(), ri.histogram())
+
+
+
+path1 = 'C:/Users/yxy86/Desktop/RMB/m1.jpg'
+path5 ='C:/Users/yxy86/Desktop/RMB/m5.jpg'
+path10 = 'C:/Users/yxy86/Desktop/RMB/m10.jpg'
+path20='C:/Users/yxy86/Desktop/RMB/m20.jpg'
+path50 = 'C:/Users/yxy86/Desktop/RMB/m50.jpg'
+path100 = 'C:/Users/yxy86/Desktop/RMB/m100.jpg'
+
+pathm = 'C:/Users/yxy86/Desktop/RMB/01/mtest.jpg'
+
+
+def calc(path1,path2):
+    img1 = Image.open(path1)
+    img2 = Image.open(path2)
+    img1 = make_regalur_image(img1)
+    img2 = make_regalur_image(img2)
+    return calc_similar(img1,img2)
+
+dict1 = {'100': '', '50':' ', '20':'', '10': '', '5': '', '1':''}
+
 
 walk()
-hash = phash('/Users/yangxiaoyu/Desktop/RMB/mtest.jpg')
+dict1['100'] = calc(pathm,path100)
+dict1['50'] = calc(pathm,path50)
+dict1['20'] = calc(pathm,path20)
+dict1['10'] = calc(pathm,path10)
+dict1['5'] = calc(pathm,path5)
+dict1['1'] = calc(pathm,path1)
+
+
+hist = hist('C:/Users/yxy86/Desktop/RMB/mtest.jpg')
+
+
 dif = 0
 max = 100
 
-def hammingDistance( x, y):
-        """
-        :type x: int
-        :type y: int
-        :rtype: int
-        """
-        return bin(x ^ y).count('1')
 
 
-for i in dict:
 
-    dif = hammingDistance(int(str(hash),32), int(str(dict[i]),32))
-    print(dif)
-    if(dif<=max):
+# def hammingDistance( x, y):
+#         """
+#         :type x: int
+#         :type y: int
+#         :rtype: int
+#         """
+#         return bin(x ^ y).count('1')
 
-        max = dif
-        name = i
+save = []
+sorted_x=sorted(dict1.items(),key=operator.itemgetter(1))
+# print(sorted_x[sorted_x.keys():tuple[-1]])
+print(list(dict(sorted_x).keys())[-1])
 
-    # print(i)
 
-print('纸币是'+name)
+
 
 
 

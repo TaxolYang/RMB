@@ -3,7 +3,7 @@ import numpy as np
 
 
 
-img1 = cv2.imread('/Users/yangxiaoyu/Desktop/RMB/50.jpg')
+img1 = cv2.imread('C:/Users/yxy86/Desktop/RMB/5.jpg')
 
 
 img2=cv2.resize(img1,(1000,500),interpolation=cv2.INTER_CUBIC)
@@ -24,7 +24,7 @@ absY = cv2.convertScaleAbs(y)
 img = cv2.addWeighted(absX,0.5,absY,0.5,0)
 
 
-ret,dst=cv2.threshold(img,110,255,cv2.THRESH_BINARY)
+ret,dst=cv2.threshold(img,70,255,cv2.THRESH_BINARY)
 
 cv2.imshow('aa', dst)
 
@@ -35,11 +35,14 @@ kernel = cv2.getStructuringElement(cv2.MORPH_RECT,(3, 3))
 #开闭运算，先开运算去除背景噪声，再继续闭运算填充目标内的孔洞
 # opened = cv2.morphologyEx(img, cv2.MORPH_OPEN, kernel)
 closed = cv2.morphologyEx(dst, cv2.MORPH_CLOSE, kernel)
+closed = cv2.morphologyEx(closed, cv2.MORPH_CLOSE, kernel)
 
 
 _,contours, hierarchy = cv2.findContours(closed,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
 #绘制轮廓
 # cv2.drawContours(img2,contours,-1,(0,0,255),3)
+
+
 
 
 save = []  #存储合理轮廓
@@ -48,7 +51,7 @@ rectall = []  #存储对应的在最小面积矩形
 
 
 for i in range(len(contours)):
-    if(5000<cv2.contourArea(contours[i])<17000):
+    if(3000<cv2.contourArea(contours[i])<4000):
             save.append(contours[i])
 
 
@@ -67,6 +70,6 @@ for i in range(0,len(save)):
 # cv2.drawContours(img2,save,-1,(0,0,255),2)
 #
 # print(save)
-cv2.imshow('bb', closed)
+cv2.imshow('bb', img2)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
